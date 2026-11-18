@@ -71,10 +71,4 @@ Public contact details, Fiverr and GitHub links, and the Web3Forms access key ar
 
 Never place private API credentials or server secrets in frontend source code.
 
-## Project foundation
-
-Adapted from a React portfolio starter by Ali Sanati, with a redesigned visual identity, custom sections and interactive demonstrations for this portfolio.
-
----
-
 Shaurya Agnihotri · Shopify & full-stack developer
