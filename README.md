@@ -1,96 +1,80 @@
-# 🌐 3D Awwwards-Level Developer Portfolio
+# Shaurya Agnihotri — Portfolio
 
-### Built with React, GSAP, Three.js, TailwindCSS
+**Websites built to convert.**
 
-This is a fully animated, interactive, 3D developer portfolio designed to **impress clients, recruiters, and hiring managers**. It's more than a portfolio—it's a web experience built with production-level code, scroll-based animations, and real-world best practices.
+A personal portfolio for my work as a Shopify and full-stack developer. This website is itself a demonstration of my approach to web development: expressive interfaces, purposeful motion, practical functionality and attention to detail.
 
-> ⚡ Inspired by Awwwards-level sites — built with React (Vite), TailwindCSS, GSAP, React Three Fiber, and Drei.
+## What I do
 
-<br/>
-<div>
-  <img src="https://github.com/user-attachments/assets/4eaf9399-fd02-4a90-83f7-2b5a361bc032" alt="Hero" style="border-radius: 8px;"/>
-  <div style="display: flex; justify-content: space-between; margin: 20px 0;">
-    <img src="https://github.com/user-attachments/assets/155bf742-b24f-4119-89f4-87e6d88c8f53" alt="Works" style="width: 32%; border-radius: 8px;"/>
-    <img src="https://github.com/user-attachments/assets/f22b9749-85ed-434f-a5f6-df1f8e221103" alt="ContactSummary" style="width: 32%; border-radius: 8px;"/>
-    <img src="https://github.com/user-attachments/assets/3e473322-b96a-433b-aec5-ece9bab25795" alt="Contact" style="width: 32%; border-radius: 8px;"/>
-  </div>
-</div>
-<br/>
+- **Shopify development:** Custom Liquid themes, reusable sections, product and collection pages, store integrations and shopping experiences.
+- **Conversion optimization:** Landing pages, clearer purchase journeys, mobile-first layouts and data-informed improvements.
+- **Web development:** Responsive business websites and applications across React, Next.js and WordPress.
+- **Full-stack engineering:** Application interfaces, API integrations, authentication and data handling.
+- **Performance and usability:** Maintainable code, SEO-friendly structure and accessible interactions.
 
-> 📺 [Watch Full YouTube Walkthrough](https://youtu.be/i0229UsdBwc)
----
+## Inside the website
 
-## 🚀 Tech Stack
+The portfolio brings these capabilities together through a procedural 3D hero, an adaptive navigation system, an interactive solutions showcase and an expandable technical index. A typography-led About section and a project enquiry form complete the experience.
 
-| Technology       | Description                             |
-| ---------------- | --------------------------------------- |
-| **React (Vite)** | Fast dev server and production bundling |
-| **Tailwind CSS** | Utility-first styling for components    |
-| **GSAP**         | Scroll-based animation and motion logic |
-| **Three.js**     | 3D scenes powered by React Three Fiber  |
-| **Drei**         | Useful helpers for 3D rendering         |
+The storefront, checkout and data explorer demonstrations run locally in the browser. They illustrate development concepts rather than representing previous client projects, live stores or measured conversion results.
 
----
+## Built with
 
-## 📁 Features
+| Technology | Role |
+| --- | --- |
+| React | Component architecture and interactive state |
+| Vite | Development server and production bundling |
+| Three.js / React Three Fiber | Procedural 3D scene and real-time rendering |
+| CSS / Tailwind CSS | Responsive layouts, typography and motion |
+| Web3Forms | Contact form submission and email delivery |
 
-- 🔥 3D Hero Section with animated planet and golden ring
-- 🧩 Smooth slide-in Navbar with staggered link animations
-- 🎯 Scroll-triggered Service Summary with horizontal word motion
-- 🖼️ Works section with hover overlays and interactive previews
-- ✍️ About section with clip-path image reveal + typewriter text
-- 🏁 Marquee-based Contact Summary and CTA
-- 💼 Fully responsive and accessible on all screen sizes
-
----
-
-## 📦 Setup & Installation
+## Run locally
 
 ```bash
-git clone https://github.com/Ali-Sanati/awwwards-portfolio.git
-cd awwwards-portfolio
 npm install
 npm run dev
 ```
 
-> Open http://localhost:5173 in your browser.
+Open the local URL displayed in the terminal (typically `http://localhost:5173`).
+
+To create and preview a production build:
+
+```bash
+npm run build
+npm run preview
+```
+
+To run the configured lint checks:
+
+```bash
+npm run lint
+```
+
+## Project structure
+
+```text
+public/                 Static assets and local fonts
+src/
+  components/           Cinematic scene and contact form
+  constants/
+    portfolio.js        Profile, services, skills and contact configuration
+  sections/             Hero, navigation, solutions and profile sections
+  App.jsx               Application layout
+  index.css             Global design system and responsive styling
+  main.jsx              React entry point
+index.html              Document metadata and entry page
+```
+
+## Contact configuration
+
+Public contact details, Fiverr and GitHub links, and the Web3Forms access key are configured in `src/constants/portfolio.js`. The enquiry form requires a valid Web3Forms access key to deliver messages. Verify delivery before publishing.
+
+Never place private API credentials or server secrets in frontend source code.
+
+## Project foundation
+
+Adapted from a React portfolio starter by Ali Sanati, with a redesigned visual identity, custom sections and interactive demonstrations for this portfolio.
 
 ---
 
-## 🛠️ Customization Tips
-
-- Change text, images, and links in /constants/index.js
-
-- Update 3D models and scene in Hero.jsx
-
-- Add your own contact info in Contact.jsx
-
-- Adjust colors, fonts, and layout via tailwind.config.js
-
----
-
-## 🔗 Assets
-
-Assets used in the project can be found [here](https://github.com/user-attachments/files/19820923/public.zip)
-
----
-
-## 📣 Like the project?
-
-If this helped you build or inspire your own site:
-
-- ⭐ Star this repo
-
-- 📺 [Watch the full walkthrough on YouTube](https://youtu.be/i0229UsdBwc)
-
-- 📬 [Connect on LinkedIn](https://www.linkedin.com/in/ali-sanati)
-
-- 📷 [Follow me on Instagram](https://www.instagram.com/ali.sanatidev/reels/)
-
----
-
-## 🤝 Let’s Build Together
-
-Drop a comment on the video or open an issue with your idea!
-
-> 📩 Like, subscribe, and let me know what kind of project you want to build together!
+Shaurya Agnihotri · Shopify & full-stack developer
