@@ -9,10 +9,10 @@ export const profile = {
   contactIntro: 'Tell me about your store, landing page or business website. We can discuss your goals, scope and the right approach before getting started.',
   stackHighlights: ['Shopify', 'Liquid', 'React', 'Next.js', 'WordPress', 'Vue.js', 'TypeScript', 'Node.js'],
   portrait: '/images/shaurya.webp',
-  email: '', // Add your public contact email
-  github: '', // Full URL to your GitHub profile
-  fiverr: '', // Full URL to your Fiverr profile or gig
-  web3formsAccessKey: '', // Public form access key from Web3Forms
+  email: (import.meta.env.VITE_CONTACT_EMAIL || '').trim(),
+  github: (import.meta.env.VITE_GITHUB_URL || '').trim(),
+  fiverr: (import.meta.env.VITE_FIVERR_URL || '').trim(),
+  web3formsAccessKey: (import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '').trim(),
 };
 // Local interactive examples, not client projects or production integrations.
 export const workItems = [

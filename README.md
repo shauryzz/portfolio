@@ -67,8 +67,17 @@ index.html              Document metadata and entry page
 
 ## Contact configuration
 
-Public contact details, Fiverr and GitHub links, and the Web3Forms access key are configured in `src/constants/portfolio.js`. The enquiry form requires a valid Web3Forms access key to deliver messages. Verify delivery before publishing.
+Create a `.env.local` file at the project root (beside `package.json`):
 
-Never place private API credentials or server secrets in frontend source code.
+```dotenv
+VITE_CONTACT_EMAIL=
+VITE_GITHUB_URL=
+VITE_FIVERR_URL=
+VITE_WEB3FORMS_ACCESS_KEY=
+```
+
+Fill in the public contact email, full profile URLs and valid Web3Forms access key. Restart the Vite development server after editing this file. Local environment files are excluded from Git. For Vercel, set the same four variables in the project's Environment Variables settings and deploy again. Verify actual form delivery before publishing.
+
+Vite embeds `VITE_` values in the browser bundle. Web3Forms access keys are designed for public client-side use; they are not secret API credentials. Never put private API credentials or server secrets in these variables.
 
 Shaurya Agnihotri · Shopify & full-stack developer

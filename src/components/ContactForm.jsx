@@ -16,7 +16,7 @@ export default function ContactForm() {
     if (pending.current) return;
     if (!configured) {
       setStatus('error');
-      setMessage(profile.email ? 'The form is not connected yet. Please use the email link instead.' : 'The form is not connected yet. Please try again later.');
+      setMessage(profile.fiverr ? 'The form is not connected yet. Please use my Fiverr link instead.' : 'The form is not connected yet. Please try again later.');
       return;
     }
     const form = event.currentTarget;
@@ -51,7 +51,7 @@ export default function ContactForm() {
       const result = await response.json().catch(() => null);
       if (!response.ok || result?.success !== true) {
         setStatus('error');
-        setMessage(response.status === 429 ? 'Too many requests. Please try again later.' : 'Your enquiry could not be confirmed. Please try again or use direct email.');
+        setMessage(response.status === 429 ? 'Too many requests. Please try again later.' : 'Your enquiry could not be confirmed. Please try again later.');
         return;
       }
       form.reset();
@@ -59,7 +59,7 @@ export default function ContactForm() {
       setMessage('Thank you. Your enquiry has been sent.');
     } catch (error) {
       setStatus('error');
-      setMessage(error.name === 'AbortError' ? 'The request timed out. Delivery could not be confirmed. Please check before resending.' : 'Could not confirm delivery. Check your connection or use direct email.');
+      setMessage(error.name === 'AbortError' ? 'The request timed out. Delivery could not be confirmed. Please check before resending.' : 'Could not confirm delivery. Check your connection and try again later.');
     } finally {
       window.clearTimeout(timeout);
       pending.current = null;

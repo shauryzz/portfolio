@@ -128,3 +128,25 @@
   .sa-about-intro h3,.sa-about-approach h3{margin-bottom:12px}
   .sa-about-approach .sa-about-result{margin-top:20px;padding-top:18px}
 }
+
+/* Social profiles: a quiet editorial panel beside the enquiry form. */
+.sa-social-panel{min-width:0;background:#0c100e;border-radius:16px;padding:clamp(22px,2.2vw,36px);color:#f6f6f2}
+.sa-social-panel h3{font-size:clamp(23px,2.05vw,34px);font-weight:400;line-height:1.14;letter-spacing:-.035em;margin:0 0 16px}
+.sa-social-intro{font-size:15px;line-height:1.55;color:#c3cbc6;margin:0 0 24px}
+.sa-social-list{border-top:1px solid #35433c}
+.sa-social-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px 13px;align-items:center;padding:23px 0;border-bottom:1px solid #35433c;min-width:0;transition:background-color .2s}
+.sa-social-mark{display:grid;place-items:center;width:44px;height:44px;border-radius:var(--sa-button-radius,10px);flex:none;line-height:1}
+.sa-social-mark-github{background:#f4f4f4;color:#111}
+.sa-social-mark-github svg{width:29px;height:29px;display:block}
+.sa-social-mark-fiverr{background:#1dbf73;color:#10241b;font-family:Arial,sans-serif;font-size:24px;font-weight:700;letter-spacing:-.07em}
+.sa-social-copy{min-width:0;display:grid;gap:5px}
+.sa-social-name{font-size:19px;line-height:1.15;color:#f6f6f2}
+.sa-social-description{font-size:13px;line-height:1.45;color:#b9c4bd;overflow-wrap:break-word}
+.sa-social-action{font-size:13px;color:var(--sa-accent);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;white-space:nowrap;justify-self:end;transition:color .2s}
+.sa-social-row:hover .sa-social-action{color:#fff}
+.sa-social-row:focus-visible{outline:2px solid var(--sa-accent);outline-offset:4px;border-radius:4px}
+/* Keep the two-column form only where the sidebar has comfortable space. */
+@media(min-width:761px) and (max-width:1100px){.sa-contact-layout.has-direct-contact{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:30px}}
+@media(min-width:761px) and (max-width:1300px){.sa-social-row{grid-template-columns:44px minmax(0,1fr)}.sa-social-action{grid-column:2;justify-self:start}}
+@media(max-width:760px){.sa-social-panel{padding:22px}.sa-social-row{padding-block:20px}}
+@media(max-width:490px){.sa-social-row{grid-template-columns:44px minmax(0,1fr)}.sa-social-action{grid-column:2;justify-self:start}}

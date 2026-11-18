@@ -58,9 +58,45 @@ export function Expertise(){
     <div className="sa-tech" id="technical-index"><div className="sa-inset"><div className="sa-tech-header"><p className="sa-label">The development stack</p><h2>Tools.<br/>Not trophies.</h2></div><div className="sa-tech-grid">{expertise.map(group=><section id={group.id} key={group.id} className="sa-skill-group"><h3>{group.title}</h3>{group.skills.map(skill=>{const id=++number;const open=expanded===skill;return <div key={skill} className={`sa-skill-row ${open?'is-open':''}`}><button type="button" aria-expanded={open} aria-controls={`sa-skill-${id}`} onClick={()=>setExpanded(open?null:skill)}><span className="sa-skill-number">{String(id).padStart(2,'0')}.</span><span>{skill}</span><span className="sa-skill-plus" aria-hidden="true">{open?'−':'+'}</span></button><p hidden={!open} id={`sa-skill-${id}`}>{skillDescriptions[skill] || group.caption}</p></div>;})}</section>)}</div></div></div>
   </section>;
 }
+// Local SVG and typographic marks keep the contact links independent of icon packages.
+function SocialMark({platform}) {
+  return platform === 'github' ? (
+    <span className="sa-social-mark sa-social-mark-github" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+        <path d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.68.08-.68 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.5-.28-5.12-1.25-5.12-5.56 0-1.23.44-2.23 1.16-3.01-.12-.29-.5-1.43.11-2.97 0 0 .95-.3 3.09 1.15A10.8 10.8 0 0 1 12 6.19c.96 0 1.92.13 2.82.38 2.15-1.45 3.09-1.15 3.09-1.15.62 1.54.23 2.68.12 2.97.72.78 1.15 1.78 1.15 3.01 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.08v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/>
+      </svg>
+    </span>
+  ) : <span className="sa-social-mark sa-social-mark-fiverr" aria-hidden="true">fi.</span>;
+}
+
 export function Closing(){
-  const socials = [['Fiverr',profile.fiverr],['GitHub',profile.github]].filter(([,url])=>url);
-  const hasContact = Boolean(profile.email || socials.length);
-  return <><section className="sa-closing" id="contact"><div className="sa-closing-band" aria-hidden="true"><div className="sa-name-track">{[0,1].map(i=><div className="sa-name-loop" key={i}><span>DESIGN / CODE / SYSTEMS&nbsp;</span></div>)}</div></div><div className="sa-inset sa-closing-main"><h2>Let's build<br/>something <em>real.</em></h2><p className="sa-contact-pending">{profile.contactIntro}</p><div className={`sa-contact-layout${hasContact?' has-direct-contact':''}`}><ContactForm/>{hasContact&&<aside className="sa-contact-direct" aria-label="Other ways to get in touch"><h3>Prefer to get in touch directly?</h3>{profile.email&&<a className="sa-closing-link" href={`mailto:${profile.email}`}>{profile.email}</a>}{socials.length>0&&<div className="sa-contact-socials">{socials.map(([label,url])=><a className="sa-underlink" key={label} href={url} target="_blank" rel="noopener noreferrer">{label}</a>)}</div>}</aside>}</div></div></section>
-    <footer className="sa-footer sa-paper"><div className="sa-footer-top sa-inset"><div><h3>Shaurya Agnihotri</h3><p>{profile.role}</p>{socials.map(([label,url])=><a className="sa-underlink" key={label} href={url} target="_blank" rel="noopener noreferrer">{label}</a>)}</div><nav aria-label="Footer navigation"><a href="#home">Home</a><a href="#about">About</a><a href="#work">Solutions</a><a href="#expertise">Expertise</a></nav><nav aria-label="Solutions navigation">{workItems.map(x=><a href={`#${x.id}`} key={x.id}>{x.name}</a>)}</nav><nav aria-label="Technical navigation">{expertise.map(x=><a href={`#${x.id}`} key={x.id}>{x.title}</a>)}</nav></div><div className="sa-footer-bottom sa-inset"><span>© {new Date().getFullYear()} Shaurya Agnihotri</span><a href="#home">Back to top ↑</a></div></footer></>;
+  const socials = [
+    { platform: 'github', label: 'GitHub', url: profile.github, description: 'Code & development', action: 'View profile' },
+    { platform: 'fiverr', label: 'Fiverr', url: profile.fiverr, description: 'Services & collaborations', action: 'View services' },
+  ].filter(({url}) => Boolean(url));
+  const hasContact = socials.length > 0;
+  return <><section className="sa-closing" id="contact">
+    <div className="sa-closing-band" aria-hidden="true"><div className="sa-name-track">{[0,1].map(i=><div className="sa-name-loop" key={i}><span>DESIGN / CODE / SYSTEMS&nbsp;</span></div>)}</div></div>
+    <div className="sa-inset sa-closing-main">
+      <h2>Let's build<br/>something <em>real.</em></h2>
+      <p className="sa-contact-pending">{profile.contactIntro}</p>
+      <div className={`sa-contact-layout${hasContact?' has-direct-contact':''}`}>
+        <ContactForm/>
+        {hasContact && <aside className="sa-social-panel" aria-labelledby="sa-social-heading">
+          <h3 id="sa-social-heading">Elsewhere on the web.</h3>
+          <p className="sa-social-intro">Explore my development work or connect with me directly.</p>
+          <div className="sa-social-list">
+            {socials.map(({platform,label,url,description,action}) => (
+              <a className="sa-social-row" href={url} target="_blank" rel="noopener noreferrer" key={platform} aria-label={`${action} on ${label} (opens in a new tab)`}>
+                <SocialMark platform={platform}/>
+                <span className="sa-social-copy"><span className="sa-social-name">{label}</span><span className="sa-social-description">{description}</span></span>
+                <span className="sa-social-action">{action}</span>
+              </a>
+            ))}
+          </div>
+        </aside>}
+      </div>
+    </div>
+  </section>
+    <footer className="sa-footer sa-paper"><div className="sa-footer-top sa-inset"><div><h3>Shaurya Agnihotri</h3><p>{profile.role}</p>{socials.map(({label,url})=><a className="sa-underlink" key={label} href={url} target="_blank" rel="noopener noreferrer">{label}</a>)}</div><nav aria-label="Footer navigation"><a href="#home">Home</a><a href="#about">About</a><a href="#work">Solutions</a><a href="#expertise">Expertise</a></nav><nav aria-label="Solutions navigation">{workItems.map(x=><a href={`#${x.id}`} key={x.id}>{x.name}</a>)}</nav><nav aria-label="Technical navigation">{expertise.map(x=><a href={`#${x.id}`} key={x.id}>{x.title}</a>)}</nav></div><div className="sa-footer-bottom sa-inset"><span>© {new Date().getFullYear()} Shaurya Agnihotri</span><a href="#home">Back to top ↑</a></div></footer></>;
 }
