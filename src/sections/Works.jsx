@@ -26,7 +26,23 @@ function ProjectVisual({item}){
   if(item.demo==='cro')return <CroDemo/>;
   return <DataDemo/>;
 }
+function StackedSolution({ item }) {
+  const [details, setDetails] = useState(false);
+  return <article id={item.id} className="sa-stacked-solution">
+    <h3>{item.name}</h3>
+    <div className="sa-project-frame">{details ? <div className="sa-project-details"><p className="sa-label">{item.type}</p><p>{item.description}</p><div>{(item.stack || []).join(' / ')}</div></div> : <ProjectVisual item={item}/>}</div>
+    <div className="sa-project-caption"><span>{item.type}</span><button type="button" className="sa-underlink" aria-pressed={details} onClick={() => setDetails(value => !value)}>{details ? 'Show visual' : 'Show details'}</button></div>
+  </article>;
+}
 export default function Works(){
+  const [stacked, setStacked] = useState(() => window.matchMedia('(max-width: 760px), (max-height: 560px)').matches);
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 760px), (max-height: 560px)');
+    const update = () => setStacked(query.matches);
+    if (query.addEventListener) query.addEventListener('change', update);
+    else query.addListener(update);
+    return () => { if (query.removeEventListener) query.removeEventListener('change', update); else query.removeListener(update); };
+  }, []);
   const track=useRef(null);
   const [current,setCurrent]=useState(0);
   const [hover,setHover]=useState(null);
@@ -47,11 +63,11 @@ export default function Works(){
     const schedule=()=>{if(!frame)frame=requestAnimationFrame(update);};
     schedule();window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);
     return()=>{window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);cancelAnimationFrame(frame);};
-  },[]);
+  },[stacked]);
   useEffect(()=>{setDetails(false);},[index]);
   return <section id="work" className="sa-work sa-paper" aria-labelledby="sa-work-title">
     <div className="sa-work-intro sa-inset"><p>Explore how a storefront, a customer journey and an application interface can work. These are interactive concepts, not client projects.</p><div><h2 id="sa-work-title">Built for business.<br/>Designed to work.</h2><div className="sa-inline-links"><a href="#about">My story</a><a href="#expertise">My expertise</a></div></div></div>
-    <div className="sa-work-scroll">
+    {stacked ? <div className="sa-stacked-solutions sa-inset">{workItems.map(item => <StackedSolution key={item.id} item={item}/>)}</div> : <div className="sa-work-scroll">
       <div className="sa-work-track" ref={track} aria-hidden="true">{workItems.map(x=><div id={x.id} key={x.id} className="sa-work-step" />)}</div>
       <div className="sa-work-sticky">
         <div className="sa-work-ghost" key={item.id} aria-hidden="true">{item.name} — {item.name}</div>
@@ -69,6 +85,6 @@ export default function Works(){
         </div>
         <div className="sa-work-progress sa-inset" aria-hidden="true"><span>{String(index+1).padStart(2,'0')}</span><div><i style={{width:`${(index+1)/workItems.length*100}%`}}/></div><span>{String(workItems.length).padStart(2,'0')}</span></div>
       </div>
-    </div>
+    </div>}
   </section>;
 }

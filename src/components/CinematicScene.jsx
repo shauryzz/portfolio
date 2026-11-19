@@ -1,5 +1,5 @@
-import { Component, useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 class SceneBoundary extends Component {
@@ -8,22 +8,39 @@ class SceneBoundary extends Component {
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function Sculpture({ paused, pointer }) {
+function Sculpture({ paused, pointer, low, onSlow, onContextLoss }) {
+  const canvas = useThree(state => state.gl.domElement);
+  useEffect(() => {
+    const lost = event => { event.preventDefault(); onContextLoss(); };
+    canvas.addEventListener('webglcontextlost', lost);
+    return () => canvas.removeEventListener('webglcontextlost', lost);
+  }, [canvas, onContextLoss]);
   const group = useRef(null);
   const seed = useMemo(() => {
     let n = 937;
     const random = () => ((n = (n * 16807) % 2147483647) - 1) / 2147483646;
-    const positions = new Float32Array(540 * 3);
+    const positions = new Float32Array((low ? 220 : 540) * 3);
     for (let i = 0; i < positions.length; i += 3) {
       positions[i] = (random() - .5) * 37;
       positions[i + 1] = (random() - .5) * 23;
       positions[i + 2] = -2 - random() * 16;
     }
     return positions;
-  }, []);
+  }, [low]);
   const stars = useRef(null);
   const phase = useRef(0);
-  useFrame((_, dt) => {
+  const sample = useRef({ time: 0, frames: 0 });
+  useEffect(() => { sample.current = { time: 0, frames: 0 }; }, [paused, low]);
+  useFrame((state, dt) => {
+    if (state.gl.getContext().isContextLost()) { onContextLoss(); return; }
+    if (!paused && !low && dt > 0 && dt < .25) {
+      sample.current.time += dt;
+      sample.current.frames += 1;
+      if (sample.current.time >= 3) {
+        if (sample.current.frames / sample.current.time < 30) onSlow();
+        sample.current = { time: 0, frames: 0 };
+      }
+    }
     if (paused || !group.current) return;
     const delta = Math.min(dt, .05);
     phase.current += delta;
@@ -41,11 +58,11 @@ function Sculpture({ paused, pointer }) {
     <pointLight position={[-2, -2, 1]} intensity={14} color="#d5edff" decay={2} />
     <group ref={group} rotation={[.16, .3, -.28]}>
       <mesh>
-        <torusKnotGeometry args={[1.35, .5, 160, 20, 2, 3]} />
+        <torusKnotGeometry args={[1.35, .5, low ? 96 : 160, low ? 12 : 20, 2, 3]} />
         <meshStandardMaterial color="#151b20" metalness={.68} roughness={.31} />
       </mesh>
       <mesh rotation={[.15, .2, .7]}>
-        <torusGeometry args={[2.35, .023, 10, 120]} />
+        <torusGeometry args={[2.35, .023, low ? 6 : 10, low ? 64 : 120]} />
         <meshStandardMaterial color="#718b91" metalness={.6} roughness={.3} emissive="#192c31" />
       </mesh>
     </group>
@@ -61,24 +78,46 @@ export default function CinematicScene({ paused }) {
   const pointer = useRef({x:0, y:0});
   const [visible, setVisible] = useState(true);
   const [reduced, setReduced] = useState(false);
+  const [foreground, setForeground] = useState(true);
+  const [low, setLow] = useState(() => typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4));
+  const [lost, setLost] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const onSlow = useCallback(() => setLow(true), []);
+  const onContextLoss = useCallback(() => { setLow(true); setLost(true); }, []);
+  useEffect(() => {
+    if (!lost || retry >= 1) return;
+    const timer = window.setTimeout(() => { setRetry(1); setLost(false); }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [lost, retry]);
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     const change = () => setReduced(media.matches);
-    change(); media.addEventListener('change', change);
-    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
-    if (ref.current) observer.observe(ref.current);
+    change();
+    if (media.addEventListener) media.addEventListener('change', change);
+    else media.addListener(change);
+    const observer = typeof IntersectionObserver !== 'undefined' ? new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting)) : null;
+    if (ref.current) observer?.observe(ref.current);
+    const visibility = () => setForeground(!document.hidden);
+    visibility();
+    document.addEventListener('visibilitychange', visibility);
     const move = (e) => { pointer.current = {x: e.clientX / window.innerWidth * 2 - 1, y: e.clientY / window.innerHeight * 2 - 1}; };
     window.addEventListener('pointermove', move, {passive:true});
-    return () => { media.removeEventListener('change',change); observer.disconnect(); window.removeEventListener('pointermove',move); };
+    return () => {
+      if (media.removeEventListener) media.removeEventListener('change', change);
+      else media.removeListener(change);
+      observer?.disconnect();
+      document.removeEventListener('visibilitychange', visibility);
+      window.removeEventListener('pointermove', move);
+    };
   }, []);
   return <div ref={ref} className={`sa-cinema ${paused ? 'is-paused' : ''}`} aria-hidden="true">
     <div className="sa-portal"><i/><b/></div>
     <div className="sa-cinema-fallback" />
-    <SceneBoundary>
-      <Canvas className="sa-three" dpr={[1, 1.5]} camera={{ position:[0,0,9], fov:43 }} gl={{alpha:true, antialias:true, powerPreference:'high-performance'}} frameloop={visible && !paused && !reduced ? 'always' : 'demand'} fallback={null}>
-        <Sculpture paused={paused || reduced || !visible} pointer={pointer}/>
+    {!lost && <SceneBoundary key={retry}>
+      <Canvas className="sa-three" dpr={low ? 1 : [1, 1.5]} camera={{ position:[0,0,9], fov:43 }} gl={{alpha:true, antialias:!low, powerPreference:'default'}} frameloop={visible && foreground && !paused && !reduced ? 'always' : 'demand'} fallback={null}>
+        <Sculpture paused={paused || reduced || !visible || !foreground} pointer={pointer} low={low} onSlow={onSlow} onContextLoss={onContextLoss}/>
       </Canvas>
-    </SceneBoundary>
+    </SceneBoundary>}
     <div className="sa-cinema-vignette" />
   </div>;
 }

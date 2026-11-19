@@ -1,5 +1,14 @@
 import { profile } from '../constants/portfolio';
-import CinematicScene from '../components/CinematicScene';
+import { Component, lazy, Suspense } from 'react';
+const CinematicScene = lazy(() => import('../components/CinematicScene'));
+function HeroBackdrop() {
+  return <div className="sa-cinema" aria-hidden="true"><div className="sa-portal"><i/><b/></div><div className="sa-cinema-fallback"/><div className="sa-cinema-vignette"/></div>;
+}
+class HeroSceneBoundary extends Component {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() { return this.state.failed ? <HeroBackdrop/> : this.props.children; }
+}
 
 const heroLoopItems = [
   'SHOPIFY',
@@ -11,7 +20,7 @@ const heroLoopItems = [
 export default function Hero({ paused, setPaused }) {
   return (
     <section id="home" className={`sa-hero ${paused ? 'is-paused' : ''}`} aria-labelledby="hero-name">
-      <CinematicScene paused={paused} />
+      <HeroSceneBoundary><Suspense fallback={<HeroBackdrop/>}><CinematicScene paused={paused}/></Suspense></HeroSceneBoundary>
       <h1 className="sa-sr-only" id="hero-name">
         {profile.name} — {profile.role}
       </h1>
@@ -28,6 +37,7 @@ export default function Hero({ paused, setPaused }) {
         </div>
       </div>
 
+      <div className="sa-hero-static" aria-hidden="true">Shopify.<br/>Full-stack.<br/><em>Conversions.</em></div>
       <div className="sa-hero-bottom">
         <div className="sa-hero-actions">
           <button

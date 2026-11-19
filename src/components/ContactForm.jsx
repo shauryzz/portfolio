@@ -76,6 +76,7 @@ export default function ContactForm() {
       <fieldset className="sa-form-services"><legend>I'm interested in <span className="sa-form-optional">Optional</span></legend><div className="sa-service-options">{services.map(service => <label className="sa-service-option" key={service}><input type="radio" name="service" value={service}/><span>{service}</span></label>)}</div></fieldset>
       <label className="sa-form-field"><span className="sa-field-label">Project details <span className="sa-required" aria-hidden="true">*</span></span><textarea name="message" placeholder="Tell me about your website, goals or timeline…" rows={4} required maxLength={3000}/></label>
       <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" hidden/>
+      <p className="sa-form-privacy">I use your name, email and project details to respond to your enquiry. Submissions are processed by <a href="https://web3forms.com/privacy" target="_blank" rel="noopener noreferrer">Web3Forms</a>. Please do not include passwords or confidential information.</p>
       <div className="sa-form-actions"><button type="submit" className="sa-form-submit" disabled={status === 'sending'}>{status === 'sending' ? 'Sending…' : 'Send enquiry'}</button><p role="status" aria-live="polite" className={`sa-form-status is-${status}`}>{message}</p></div>
     </fieldset>
   </form>;
